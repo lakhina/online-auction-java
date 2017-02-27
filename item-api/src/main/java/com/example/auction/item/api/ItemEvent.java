@@ -48,6 +48,11 @@ public abstract class ItemEvent {
             this.itemStatus = itemStatus;
             this.currencyId = currencyId;
         }
+
+        @Override
+        public UUID getItemId() {
+            return itemId;
+        }
     }
 
 
@@ -72,6 +77,11 @@ public abstract class ItemEvent {
             this.startDate = startDate;
             this.endDate = endDate;
         }
+
+        @Override
+        public UUID getItemId() {
+            return itemId;
+        }
     }
 
     /**
@@ -91,6 +101,11 @@ public abstract class ItemEvent {
             this.itemId = itemId;
             this.item = item;
         }
+
+        @Override
+        public UUID getItemId() {
+            return itemId;
+        }
     }
 
     /**
@@ -105,5 +120,9 @@ public abstract class ItemEvent {
             this.itemId = itemId;
         }
 
+        @Override
+        public UUID getItemId() {
+            return itemId;
+        }
     }
 }

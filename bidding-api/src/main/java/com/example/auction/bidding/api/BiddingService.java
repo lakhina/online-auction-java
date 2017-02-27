@@ -3,9 +3,7 @@
  */
 package com.example.auction.bidding.api;
 
-import static com.lightbend.lagom.javadsl.api.Service.named;
-import static com.lightbend.lagom.javadsl.api.Service.pathCall;
-import static com.lightbend.lagom.javadsl.api.Service.topic;
+import static com.lightbend.lagom.javadsl.api.Service.*;
 
 import akka.NotUsed;
 import com.example.auction.security.SecurityHeaderFilter;
