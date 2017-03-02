@@ -27,6 +27,12 @@ sbt runAll
 * To import the online-auction-javaproject into Eclipse you can have a look at [The Lagom Documentation for Eclipse](http://www.lagomframework.com/documentation/1.3.x/java/EclipseSbt.html)
 * You will also need to add Lambok plugin in your IDE for annotations. Take a look at [The Lagom Documentation for Lambok](http://www.lagomframework.com/documentation/1.3.x/java/Immutable.html#Lombok)
 
+## Installing sbt
+
+* To install sbt on Mac you can have a look at [The SBT Documentation for Mac](http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Mac.html)
+* To install sbt on Windows you can have a look at [The SBT Documentation for Windows](http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Windows.html)
+* To install sbt on Linux you can have a look at [The SBT Documentation for Linux](http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Linux.html)
+
 # Auction system - System architecture
 
 The auction system is the sum of 5 micro-services and a web gateway:
