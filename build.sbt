@@ -169,7 +169,11 @@ lazy val webGateway = (project in file("web-gateway"))
       lagomJavadslClient,
       "org.ocpsoft.prettytime" % "prettytime" % "3.2.7.Final",
       "org.webjars" % "foundation" % "6.2.3",
-      "org.webjars" % "foundation-icon-fonts" % "d596a3cfb3"
+      "org.webjars" % "foundation-icon-fonts" % "d596a3cfb3",
+      "org.webjars" % "bootstrap" % "3.3.1",
+      "org.webjars" % "jquery" % "2.1.3",
+      "org.webjars" % "font-awesome" % "4.2.0",
+      "org.webjars" % "angularjs" % "1.3.8"
     ),
     // Workaround for https://github.com/lagom/online-auction-java/issues/22
     // Uncomment the commented out line and remove the Scala line when issue #22 is fixed
