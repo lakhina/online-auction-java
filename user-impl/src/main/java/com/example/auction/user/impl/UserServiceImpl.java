@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     public ServiceCall<User, User> createUser() {
         return user -> {
             UUID uuid = UUID.randomUUID();
-            return entityRef(uuid).ask(new UserCommand.CreateUser(user.getName()));
+            return entityRef(uuid).ask(new UserCommand.CreateUser(user.getName(),user.getEmail(),user.getPassword()));
         };
     }
 

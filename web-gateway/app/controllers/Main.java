@@ -10,6 +10,7 @@ import play.data.Form;
 import play.Configuration;
 
 import javax.inject.Inject;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -40,7 +41,7 @@ public class Main extends AbstractController {
     public CompletionStage<Result> createUserForm() {
         return withUser(ctx(), userId ->
                 loadNav(userId).thenApply(nav ->
-                        ok(views.html.createUser.render(showInlineInstruction, formFactory.form(CreateUserForm.class), nav))
+                        ok(views.html.createUser.render(showInlineInstruction, formFactory.form(CreateUserForm.class), Optional.empty(),nav))
                 )
         );
     }
@@ -51,10 +52,12 @@ public class Main extends AbstractController {
                 loadNav(userId).thenCompose(nav -> {
                     Form<CreateUserForm> form = formFactory.form(CreateUserForm.class).bindFromRequest(ctx.request());
                     if (form.hasErrors()) {
-                        return CompletableFuture.completedFuture(ok(views.html.createUser.render(showInlineInstruction, form, nav)));
+                        return CompletableFuture.completedFuture(ok(views.html.createUser.render(showInlineInstruction, form,Optional.empty(), nav)));
                     }
-
-                    return userService.createUser().invoke(new User(form.get().getName())).thenApply(user -> {
+                    if(!(form.get().getPassword().equals(form.get().getConfirmPassword()))){
+                        String msg="Password and confirm password don't match";
+                        return CompletableFuture.completedFuture(ok(views.html.createUser.render(showInlineInstruction, form, Optional.of(msg), nav)));}
+                    return userService.createUser().invoke(new User(form.get().getName(),form.get().getEmail(),form.get().getPassword())).thenApply(user -> {
                         ctx.session().put("user", user.getId().toString());
                         return redirect(ProfileController.defaultProfilePage());
                     });
