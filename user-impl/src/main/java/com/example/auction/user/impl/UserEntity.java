@@ -9,11 +9,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class UserEntity extends PersistentEntity<UserCommand, UserEvent, Optional<User>> {
+public class UserEntity extends PersistentEntity<UserCommand, UserEvent, Optional<PUser>> {
 
     @Override
-    public Behavior initialBehavior(Optional<Optional<User>> snapshotState) {
-        Optional<User> user = snapshotState.flatMap(Function.identity());
+    public Behavior initialBehavior(Optional<Optional<PUser>> snapshotState) {
+        Optional<PUser> user = snapshotState.flatMap(Function.identity());
 
         if (user.isPresent()) {
             return created(user.get());
@@ -22,7 +22,7 @@ public class UserEntity extends PersistentEntity<UserCommand, UserEvent, Optiona
         }
     }
 
-    private Behavior created(User user) {
+    private Behavior created(PUser user) {
         BehaviorBuilder b = newBehaviorBuilder(Optional.of(user));
 
         b.setReadOnlyCommandHandler(GetUser.class, (get, ctx) ->
@@ -44,7 +44,7 @@ public class UserEntity extends PersistentEntity<UserCommand, UserEvent, Optiona
         );
 
         b.setCommandHandler(CreateUser.class, (create, ctx) -> {
-            User user = new User(UUID.fromString(entityId()), create.getName(),create.getEmail(),create.getPassword());
+            PUser user = new PUser(UUID.randomUUID(),create.getName(),create.getEmail(),create.getPassword());
             return ctx.thenPersist(new UserCreated(user), (e) -> ctx.reply(user));
         });
 

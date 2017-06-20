@@ -13,6 +13,13 @@ public class CreateUserForm {
     @Constraints.Required
     private String confirmPassword;
 
+    public String validate() {
+        if (!getPassword().equals(getConfirmPassword())) {
+            return "Password and confirm password should be same";
+        }
+        return null;
+    }
+
     public String getName() {
         return name;
     }

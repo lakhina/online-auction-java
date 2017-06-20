@@ -8,6 +8,7 @@ import akka.persistence.query.javadsl.CurrentPersistenceIdsQuery;
 import akka.stream.Materializer;
 import akka.stream.javadsl.Sink;
 import com.example.auction.user.api.User;
+import com.example.auction.user.api.UserRegistration;
 import com.example.auction.user.api.UserService;
 import com.lightbend.lagom.javadsl.api.ServiceCall;
 import com.lightbend.lagom.javadsl.api.transport.NotFound;
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServiceCall<User, User> createUser() {
+    public ServiceCall<UserRegistration, User> createUser() {
         return user -> {
             UUID uuid = UUID.randomUUID();
             return entityRef(uuid).ask(new UserCommand.CreateUser(user.getName(),user.getEmail(),user.getPassword()));
