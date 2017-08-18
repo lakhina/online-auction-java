@@ -1,18 +1,24 @@
 package com.example.auction.user.impl;
 
 import akka.NotUsed;
+import com.datastax.driver.core.Row;
 import com.example.auction.pagination.PaginatedSequence;
 import com.example.auction.user.api.User;
 import com.example.auction.user.api.UserRegistration;
 import com.example.auction.user.api.UserService;
 import com.lightbend.lagom.javadsl.api.ServiceCall;
+import com.lightbend.lagom.javadsl.api.transport.NotFound;
 import com.lightbend.lagom.javadsl.persistence.PersistentEntityRef;
 import com.lightbend.lagom.javadsl.persistence.PersistentEntityRegistry;
+import org.pcollections.PSequence;
 
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
 
 public class UserServiceImpl implements UserService {
 
@@ -31,13 +37,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public ServiceCall<UserRegistration, User> createUser() {
         return user -> {
-            UUID uuid = UUID.randomUUID();
-            Instant createdAt = Instant.now();
-            String password = PUserCommand.hashPassword(user.getPassword());
-            PUser createdUser = new PUser(uuid,  user.getName(), user.getEmail(), password);
-            return entityRef(uuid)
-                    .ask(new PUserCommand.CreatePUser(user.getName(), user.getEmail(), password))
-                    .thenApply(done -> Mappers.toApi(Optional.ofNullable(createdUser)));
+            CompletionStage<PSequence<User>> sequence = userRepository.selectUsersByEmail(user.getEmail());
+           return sequence.thenApply(users -> {
+                Optional<User> userByEmail = users.stream().filter(req ->
+                        user.getEmail().equals(req.getEmail())
+                ).findFirst();
+                if(!userByEmail.isPresent()) {
+                    UUID uuid = UUID.randomUUID();
+                    String password = PUserCommand.hashPassword(user.getPassword());
+                    PUser createdUser = new PUser(uuid, user.getName(), user.getEmail(), password);
+                    entityRef(uuid)
+                            .ask(new PUserCommand.CreatePUser(user.getName(), user.getEmail(), password))
+                            .thenApply(done -> Mappers.toApi(Optional.ofNullable(createdUser)));
+
+                }
+
+                else{
+                        throw new NotFound("User with this email id already exists");
+                    }
+               return null;
+                });
+
         };
     }
 

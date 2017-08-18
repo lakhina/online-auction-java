@@ -78,8 +78,20 @@ public class UserRepository {
                 .thenApply(UserSummaries -> UserSummaries.collect(Collectors.toList()))
                 .thenApply(TreePVector::from);
     }
+    protected CompletionStage<PSequence<User>> selectUsersByEmail(String email) {
 
+        return session
+                .selectAll(
+                        "SELECT * FROM UserInfo WHERE email = ? " +
 
+                    email
+
+                )
+                .thenApply(List::stream)
+                .thenApply(rows -> rows.map(UserRepository::convertUserSummary))
+                .thenApply(UserSummaries -> UserSummaries.collect(Collectors.toList()))
+                .thenApply(TreePVector::from);
+    }
     private static User convertUserSummary(Row user) {
         return new User(
 
@@ -184,9 +196,7 @@ public class UserRepository {
             );
         }
 
-        private CompletionStage<Optional<Row>> selectUser(UUID UserId) {
-            return session.selectOne("SELECT * FROM UserInfo WHERE userId = ?", UserId);
-        }
+
 
     }
 }
